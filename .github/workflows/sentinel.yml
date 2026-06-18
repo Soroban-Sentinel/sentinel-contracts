@@ -1,0 +1,56 @@
+name: Soroban Sentinel — Fuzz & Verify
+
+on:
+  pull_request:
+    branches: ["main", "master"]
+  push:
+    branches: ["main", "master"]
+
+jobs:
+  sentinel:
+    name: Fuzz & Formal Verification
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write   # post status comment
+      checks: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: rustfmt, clippy
+
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-fuzz
+        run: cargo install cargo-fuzz --locked
+
+      - name: Install stellar-cli (for WASM build)
+        run: cargo install stellar-cli --locked
+
+      - name: Run Soroban Sentinel
+        id: sentinel
+        uses: soroban-sentinel/sentinel-action@v1   # published separately in sentinel-backend
+        with:
+          config: .sentinel.toml
+          api-endpoint: ${{ secrets.SENTINEL_API_URL }}
+          api-token: ${{ secrets.SENTINEL_API_TOKEN }}
+          fail-on-violation: true
+
+      - name: Upload findings report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sentinel-findings
+          path: sentinel-report.json

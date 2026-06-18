@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "contracts/token",
+    "contracts/vault",
+    "sentinel-config",
+]
+resolver = "2"
+
+[workspace.dependencies]
+soroban-sdk = { version = "20.0.0", features = ["testutils"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"

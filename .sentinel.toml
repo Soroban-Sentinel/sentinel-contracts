@@ -1,0 +1,18 @@
+# Soroban Sentinel configuration file.
+# Drop this at your workspace root and the CI action picks it up automatically.
+
+version = "1"
+
+[[contracts]]
+name = "sentinel-token"
+path = "contracts/token"
+# Apply built-in invariant templates — no harness code required.
+invariants = ["balance_conservation", "no_overflow"]
+fuzz_timeout_secs = 120
+fuzz_iterations = 0
+
+[[contracts]]
+name = "sentinel-vault"
+path = "contracts/vault"
+invariants = ["access_control", "no_overflow"]
+fuzz_timeout_secs = 60
