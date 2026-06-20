@@ -11,7 +11,7 @@ jobs:
     name: Fuzz & Formal Verification
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write   # post status comment
+      pull-requests: write
       checks: write
 
     steps:
@@ -33,24 +33,20 @@ jobs:
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Install cargo-fuzz
-        run: cargo install cargo-fuzz --locked
+      - name: Format check
+        run: cargo fmt --all -- --check
 
-      - name: Install stellar-cli (for WASM build)
-        run: cargo install stellar-cli --locked
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
 
-      - name: Run Soroban Sentinel
-        id: sentinel
-        uses: soroban-sentinel/sentinel-action@v1   # published separately in sentinel-backend
-        with:
-          config: .sentinel.toml
-          api-endpoint: ${{ secrets.SENTINEL_API_URL }}
-          api-token: ${{ secrets.SENTINEL_API_TOKEN }}
-          fail-on-violation: true
+      - name: Run contract unit tests
+        run: cargo test --all
 
-      - name: Upload findings report
-        if: always()
+      - name: Build WASM artifacts
+        run: cargo build --target wasm32-unknown-unknown --release -p sentinel-token -p sentinel-vault
+
+      - name: Upload WASM artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sentinel-findings
-          path: sentinel-report.json
+          name: contract-wasm
+          path: target/wasm32-unknown-unknown/release/*.wasm

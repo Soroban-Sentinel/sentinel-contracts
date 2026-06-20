@@ -30,9 +30,10 @@ fn default_fuzz_timeout() -> u64 {
     60
 }
 
-impl SentinelConfig {
-    /// Parse config from a TOML string.
-    pub fn from_str(s: &str) -> Result<Self, toml::de::Error> {
+impl std::str::FromStr for SentinelConfig {
+    type Err = toml::de::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         toml::from_str(s)
     }
 }
@@ -40,6 +41,7 @@ impl SentinelConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::str::FromStr;
 
     #[test]
     fn parses_example_config() {
