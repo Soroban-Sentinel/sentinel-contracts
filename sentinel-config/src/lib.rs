@@ -62,6 +62,9 @@ invariants = ["access_control", "no_overflow"]
         let cfg = SentinelConfig::from_str(raw).unwrap();
         assert_eq!(cfg.contracts.len(), 2);
         assert_eq!(cfg.contracts[0].name, "sentinel-token");
-        assert_eq!(cfg.contracts[1].invariants, vec!["access_control", "no_overflow"]);
+        assert_eq!(
+            cfg.contracts[1].invariants,
+            vec!["access_control", "no_overflow"]
+        );
     }
 }

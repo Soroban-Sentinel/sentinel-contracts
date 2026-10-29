@@ -1,4 +1,4 @@
-name: Soroban Sentinel — Fuzz & Verify
+name: Soroban contract quality checks
 
 on:
   pull_request:
@@ -8,11 +8,10 @@ on:
 
 jobs:
   sentinel:
-    name: Fuzz & Formal Verification
+    name: Format, lint, test and WASM build
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
-      checks: write
+      contents: read
 
     steps:
       - name: Checkout
@@ -37,13 +36,13 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Clippy
-        run: cargo clippy --all-targets -- -D warnings
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
 
       - name: Run contract unit tests
-        run: cargo test --all
+        run: cargo test --workspace --locked
 
       - name: Build WASM artifacts
-        run: cargo build --target wasm32-unknown-unknown --release -p sentinel-token -p sentinel-vault
+        run: cargo build --locked --target wasm32-unknown-unknown --release -p sentinel-token -p sentinel-vault
 
       - name: Upload WASM artifacts
         uses: actions/upload-artifact@v4
