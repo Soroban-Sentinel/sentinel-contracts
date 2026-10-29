@@ -20,7 +20,9 @@ promptly because any authorized address can become administrator while uninitial
 
 ## Reproduce the checks
 
-The workspace pins Soroban SDK 22.0.11. Install Rust with rustfmt and Clippy, plus the `wasm32-unknown-unknown` target:
+The workspace pins Soroban SDK 22.0.11 and Rust 1.96.0. Rustup reads
+`rust-toolchain.toml` to select the same compiler, Clippy and rustfmt used by CI,
+including the `wasm32-unknown-unknown` target:
 
 ```sh
 rustup target add wasm32-unknown-unknown

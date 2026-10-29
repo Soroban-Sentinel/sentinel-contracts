@@ -26,5 +26,7 @@ regressions and authorization patterns to study and extend.
 Local validation on 2026-10-29 passed: formatting, Clippy with warnings denied,
 all seven workspace tests, and release WASM compilation for both contracts.
 
-Before submission, publish the changes and attach the resulting commit and successful CI
-run links. Confirm these changes postdate the rejection. This draft has not been submitted.
+Security improvements were published in commit
+[ac202eb](https://github.com/Soroban-Sentinel/sentinel-contracts/commit/ac202eb691b1786e612fd5641a3555a1054ea19a).
+Local and CI toolchains are now pinned to Rust 1.96.0 for reproducibility.
+Before submission, attach a successful CI run link. Confirm these changes postdate the rejection. This draft has not been submitted.

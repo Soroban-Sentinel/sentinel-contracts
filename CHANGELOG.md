@@ -17,6 +17,9 @@
 - Separate Soroban SDK test features from production dependencies.
 - Make CI names, permissions and documentation match the checks actually performed.
 
+- Pin local and CI Rust to the validated 1.96.0 toolchain and include the compiler
+  version in the cache key to avoid drifting checks and stale compiler caches.
+
 ### Migration
 
 The vault no longer exposes `emergency_drain(Address)`. Use `set_paused(bool)` with the
